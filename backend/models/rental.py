@@ -17,7 +17,7 @@ class Rental(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     customer_id = Column(Integer, ForeignKey("customers.id"))
-    inventory_id = Column(Integer, ForeignKey("movie_copies.inventory_code"))
+    inventory_id = Column(Integer, ForeignKey("movie_copies.id"))
 
     issue_date = Column(DateTime, default=datetime.utcnow)
     planned_return_date = Column(DateTime)

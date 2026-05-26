@@ -13,7 +13,6 @@ class Movie(Base):
     __tablename__ = "movies"
 
     id = Column(Integer, primary_key=True, index=True)
-
     title = Column(String, nullable=False)
     director = Column(String, nullable=False)
     actors = Column(Text)
@@ -23,8 +22,9 @@ class Movie(Base):
     description = Column(Text)
     dubbing_languages = Column(Text)
     price = Column(Integer, nullable=False)
-
-    category_id = Column(Integer, ForeignKey("categories.id"))
-
+    category_id = Column(Integer,ForeignKey("categories.id"))
+    movie_code = Column(String,unique=True,nullable=False)
+    previous_movie_id = Column(Integer,ForeignKey("movies.id"),nullable=True)
     category = relationship("Category")
-    copies = relationship("MovieCopy", back_populates="movie")
+    copies = relationship( "MovieCopy",back_populates="movie")
+    previous_movie = relationship("Movie", remote_side=[id], foreign_keys=[previous_movie_id])

@@ -9,6 +9,7 @@ from db import get_db
 from models.movie import Movie
 from models.category import Category
 from schemas.movie import MovieCreate, MovieResponse
+from utils.movie_code import generate_movie_code
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
 
@@ -60,7 +61,8 @@ def create_movie(movie: MovieCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=f"Category with id {movie.category_id} does not exist")
     
     try:
-        new_movie = Movie(**movie.model_dump())
+        movie_code = generate_movie_code(db, movie.category_id)
+        new_movie = Movie(**movie.model_dump(), movie_code = movie_code)
         db.add(new_movie)
         db.commit()
         db.refresh(new_movie)
@@ -70,7 +72,7 @@ def create_movie(movie: MovieCreate, db: Session = Depends(get_db)):
         }
     except IntegrityError as e:
         db.rollback()
-        raise HTTPException(status_code=400, detail="Invalid movie data or integrity constraint violation")
+        raise HTTPException(status_code=400, detail=f"Error creating movie: {str(e)}")
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Error creating movie: {str(e)}")
