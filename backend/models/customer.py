@@ -4,7 +4,7 @@ from sqlalchemy import String
 from sqlalchemy import Date
 from sqlalchemy import DateTime
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from db import Base
 
@@ -20,4 +20,4 @@ class Customer(Base):
     phone = Column(String)
     email = Column(String)
 
-    registration_date = Column(DateTime, default=datetime.utcnow)
+    registration_date = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
