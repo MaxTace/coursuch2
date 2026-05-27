@@ -6,7 +6,7 @@ from sqlalchemy import ForeignKey
 
 from sqlalchemy.orm import relationship
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from db import Base
 
@@ -19,7 +19,7 @@ class Rental(Base):
     customer_id = Column(Integer, ForeignKey("customers.id"))
     inventory_id = Column(Integer, ForeignKey("movie_copies.id"))
 
-    issue_date = Column(DateTime, default=datetime.utcnow)
+    issue_date = Column(DateTime, default=lambda: datetime.now(timezone.utc).replace(tzinfo=None))
     planned_return_date = Column(DateTime)
     actual_return_date = Column(DateTime, nullable=True)
 
