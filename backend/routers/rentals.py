@@ -10,9 +10,22 @@ from services.rental_service import RentalService
 router = APIRouter(prefix="/rentals", tags=["Rentals"])
 
 
+@router.get("/")
+def get_rentals(db: Session = Depends(get_db)):
+    return RentalService.get_all_rentals(db)
+
+
 @router.post("/issue")
 def issue_movie(
     rental_data: RentalCreate,
     db: Session = Depends(get_db)
 ):
     return RentalService.create_rental(db, rental_data)
+
+
+@router.post("/{rental_id}/return")
+def return_movie(
+    rental_id: int,
+    db: Session = Depends(get_db)
+):
+    return RentalService.return_rental(db, rental_id)
