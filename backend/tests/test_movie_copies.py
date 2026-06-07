@@ -32,6 +32,19 @@ def test_add_and_get_copies(client):
     assert copies[0]["status"] == "available"
 
 
+def test_add_copies_with_media_type(client):
+    cat = make_category(client)
+    movie = make_movie(client, cat["id"])
+
+    resp = client.post(f"/movies/{movie['id']}/copies?copies_count=2&media_type=VHS")
+    assert resp.status_code == 200
+
+    copies = client.get(f"/movies/{movie['id']}/copies").json()
+    assert len(copies) == 2
+    assert copies[0]["media_type"] == "VHS"
+    assert copies[1]["media_type"] == "VHS"
+
+
 def test_copy_inventory_code_format(client):
     cat = make_category(client)
     movie = make_movie(client, cat["id"])

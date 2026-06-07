@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends
+from typing import Literal
+
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 
 from db import get_db
@@ -19,7 +21,8 @@ def get_movie_copies(movie_id: int, db: Session = Depends(get_db)):
 @router.post("/{movie_id}/copies")
 def add_movie_copies(
     movie_id: int,
-    copies_count: int,
+    copies_count: int = Query(..., ge=1),
+    media_type: Literal["DVD", "CD", "VHS"] = Query("DVD"),
     db: Session = Depends(get_db)
 ):
 
@@ -43,7 +46,7 @@ def add_movie_copies(
             movie_id=movie_id,
             inventory_code=inventory_number,
             status="available",
-            media_type="DVD"
+            media_type=media_type
         )
 
         db.add(copy)
