@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+﻿from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 
@@ -13,6 +13,4 @@ class RentalResponse(BaseModel):
     rental_price: float
     deposit: float
     total_price: float
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

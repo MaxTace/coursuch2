@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+﻿from pydantic import BaseModel, ConfigDict
 
 
 class MovieCreate(BaseModel):
@@ -16,7 +16,5 @@ class MovieCreate(BaseModel):
 
 class MovieResponse(MovieCreate):
     id: int
-    copies_count: int 
-
-    class Config:
-        from_attributes = True
+    copies_count: int
+    model_config = ConfigDict(from_attributes=True)
